@@ -45,6 +45,8 @@ type DeployOptions struct {
 	SetVariables map[string]string
 	// Whether to adopt any pre-existing K8s resources into the Helm charts managed by Zarf
 	AdoptExistingResources bool
+	// Whether to skip cluster preflight deployment checks
+	BypassClusterChecks bool
 	// Timeout for Helm operations
 	Timeout time.Duration
 	// Retries to preform for operations like git and image pushes
@@ -171,8 +173,10 @@ func (d *deployer) deployComponents(ctx context.Context, pkgLayout *layout.Packa
 				if err != nil {
 					return nil, err
 				}
-				if err := d.verifyPackageIsDeployable(ctx, pkgLayout.Pkg); err != nil {
-					return nil, fmt.Errorf("unable to connect to the Kubernetes cluster: %w", err)
+				if !opts.BypassClusterChecks {
+					if err := d.verifyPackageIsDeployable(ctx, pkgLayout.Pkg); err != nil {
+						return nil, fmt.Errorf("unable to connect to the Kubernetes cluster: %w", err)
+					}
 				}
 			}
 			// If this package has been deployed before, increment the package generation within the secret

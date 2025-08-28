@@ -74,6 +74,8 @@ type ZarfFindImagesOptions struct {
 type ZarfDeployOptions struct {
 	// Whether to adopt any pre-existing K8s resources into the Helm charts managed by Zarf
 	AdoptExistingResources bool
+	// Whether to skip cluster preflight deployment checks
+	BypassClusterChecks bool
 	// Timeout for performing Helm operations
 	Timeout time.Duration
 	// [Library Only] A map of component names to chart names containing Helm Chart values to override values on deploy

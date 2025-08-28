@@ -211,7 +211,7 @@ func newPackageDeployCommand(v *viper.Viper) *cobra.Command {
 	// Always require adopt-existing-resources flag (no viper)
 	cmd.Flags().BoolVar(&pkgConfig.DeployOpts.AdoptExistingResources, "adopt-existing-resources", false, lang.CmdPackageDeployFlagAdoptExistingResources)
 	cmd.Flags().DurationVar(&pkgConfig.DeployOpts.Timeout, "timeout", v.GetDuration(VPkgDeployTimeout), lang.CmdPackageDeployFlagTimeout)
-
+	cmd.Flags().BoolVar(&pkgConfig.DeployOpts.BypassClusterChecks, "bypass-cluster-checks", false, lang.CmdPackageDeployFlagBypassClusterChecks)
 	cmd.Flags().IntVar(&pkgConfig.PkgOpts.Retries, "retries", v.GetInt(VPkgRetries), lang.CmdPackageFlagRetries)
 	cmd.Flags().StringToStringVar(&pkgConfig.PkgOpts.SetVariables, "set", v.GetStringMapString(VPkgDeploySet), lang.CmdPackageDeployFlagSet)
 	cmd.Flags().StringVar(&pkgConfig.PkgOpts.OptionalComponents, "components", v.GetString(VPkgDeployComponents), lang.CmdPackageDeployFlagComponents)
@@ -265,6 +265,7 @@ func (o *packageDeployOptions) run(cmd *cobra.Command, args []string) (err error
 
 	deployOpts := packager.DeployOptions{
 		AdoptExistingResources: pkgConfig.DeployOpts.AdoptExistingResources,
+		BypassClusterChecks:    pkgConfig.DeployOpts.BypassClusterChecks,
 		Timeout:                pkgConfig.DeployOpts.Timeout,
 		Retries:                pkgConfig.PkgOpts.Retries,
 		OCIConcurrency:         config.CommonOptions.OCIConcurrency,
